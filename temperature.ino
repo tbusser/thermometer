@@ -93,7 +93,12 @@ void updateProgress() {
 	const int widthToDo = display.width() - widthDone;
 	const int startRow = display.height() - progressBarHeight;
 
+	// This will draw a white bar representing how long to go till the sensor
+	// readings will be updated.
 	display.drawRect(0, startRow, widthToDo, progressBarHeight, SSD1306_WHITE);
+	// The will draw a black bar starting at the end of the white bar all the
+	// way to the end of the display. It represents the time already passed
+	// since the last sensor readings update.
 	display.drawRect(widthToDo, startRow, widthDone, progressBarHeight, SSD1306_BLACK);
 
 	display.display();
@@ -110,12 +115,17 @@ void updateReadings() {
 }
 
 void updateHumidityReading(float humidity) {
+	// The humidity reading will be displayed in the second half of the screen,
+	// the cursor will have to be moved to the proper position.
 	display.setCursor(0,32);
+	// Print the heading for the reading
 	display.setTextSize(1);
 	display.print(F("Humidity"));
+
+	// Move the cursor a little lower than a println would've done so there is
+	// a little more vertical space between the heading and the value.
 	display.setCursor(0,42);
 	display.setTextSize(2);
-
 	if (isnan(humidity)) {
 		display.print(F("--.-%"));
 	} else {
@@ -125,9 +135,13 @@ void updateHumidityReading(float humidity) {
 }
 
 void updateTemperatureReading(float temperature) {
+	// Print the heading for the reading
 	display.setTextSize(1);
 	display.setCursor(0,0);
 	display.print(F("Temperature"));
+
+	// Move the cursor a little lower than a println would've done so there is
+	// a little more vertical space between the heading and the value.
 	display.setCursor(0,10);
 	display.setTextSize(2);
 	if (isnan(temperature)) {
@@ -135,8 +149,14 @@ void updateTemperatureReading(float temperature) {
 	} else {
 		display.print(temperature, 1);
 	}
+
+	// This will draw a small degrees symbol, by drawing it at text size 1 it
+	// looks like superscript compared to the larger text around it.
 	display.setTextSize(1);
 	display.write(167);
+
+	// Set the text size again to 2 so the Celsius symbol has the same text size
+	// as the temperature.
 	display.setTextSize(2);
 	display.print(F("C"));
 }
